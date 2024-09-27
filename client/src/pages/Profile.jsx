@@ -48,10 +48,13 @@ export default function Profile() {
             (error) => {
                 setImageError(true);
             },
-            () => {
-                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) =>
-                    setFormData({ ...formData, profilePicture: downloadURL })
+            async () => {
+                const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+                // Burada Redux store'u güncelleyin
+                dispatch(
+                    updateUserSuccess({ ...currentUser, profilePicture: downloadURL })
                 );
+                setFormData({ ...formData, profilePicture: downloadURL });
             }
         );
     };
